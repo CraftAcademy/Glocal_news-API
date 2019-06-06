@@ -35,10 +35,10 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
 
       get "/api/v1/articles", headers: headers    
       expect(json_response.first).to include('reviews')
-      expect(json_response.first['reviews'][0].length).to eq 3
+      expect(json_response.first['reviews'][0].length).to eq 4
       expect(json_response.first['reviews']).to be_truthy
       expect(json_response.last).to include('reviews')
-      expect(json_response.last['reviews'][0].length).to eq 3
+      expect(json_response.last['reviews'][0].length).to eq 4
       expect(json_response.last['reviews']).to be_truthy
     end
   end
