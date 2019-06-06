@@ -18,6 +18,26 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
       get "/api/v1/articles", headers: headers
       expect(response.status).to eq 200
     end
+    
+    it "has a category key in the response" do
+      get "/api/v1/articles", headers: headers
+      expect(json_response.first).to include('category')
+      expect(json_response.first['category'].length).to eq 2
+      expect(json_response.first['category']).to be_truthy
+      expect(json_response.last).to include('category')
+      expect(json_response.last['category'].length).to eq 2
+      expect(json_response.last['category']).to be_truthy
+    end
+    
+    it "has a reviews key in the response" do
+      get "/api/v1/articles", headers: headers
+      expect(json_response.first).to include('reviews')
+      expect(json_response.first['reviews'].length).to eq 3
+      expect(json_response.first['reviews']).to be_truthy
+      expect(json_response.last).to include('reviews')
+      expect(json_response.last['reviews'].length).to eq 3
+      expect(json_response.last['reviews']).to be_truthy
+    end
   end
 
   describe "GET /api/v1/articles/id" do
