@@ -27,7 +27,7 @@ class Api::V1::ReviewsController < ApplicationController
     if article.reviews.count >= 3
       average_score = article.reviews.sum(&:score)/article.reviews.count.to_f
       if average_score >= 6
-        article.update(published: :true)
+        article.update_column(:published, [true])
       end
     end
   end
