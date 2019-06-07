@@ -32,16 +32,17 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
     end
     
     it "has a reviews key in the response" do
-      FactoryBot.create(:review, article_id: Article.first.id, score: 10)
-      FactoryBot.create(:review, article_id: Article.last.id, score: 10)
 
-      get "/api/v1/articles", headers: headers    
-      expect(json_response.first).to include('reviews')
-      expect(json_response.first['reviews'][0].length).to eq 4
-      expect(json_response.first['reviews']).to be_truthy
-      expect(json_response.last).to include('reviews')
-      expect(json_response.last['reviews'][0].length).to eq 4
-      expect(json_response.last['reviews']).to be_truthy
+      articles = Article.all
+
+      articles.each do |article|
+        FactoryBot.create(:review, article_id: article.id, score: 10)
+
+        get "/api/v1/articles", headers: headers
+        expect(json_response[articles.index(article)]).to include('reviews')
+        expect(json_response[articles.index(article)]['reviews'][0].length).to eq 4
+        expect(json_response[articles.index(article)]['reviews']).to be_truthy
+      end
     end
   end
 
