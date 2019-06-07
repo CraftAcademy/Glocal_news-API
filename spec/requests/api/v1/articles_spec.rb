@@ -18,6 +18,32 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
       get "/api/v1/articles", headers: headers
       expect(response.status).to eq 200
     end
+    
+    it "has a category key in the response" do
+      get "/api/v1/articles", headers: headers
+
+      articles = Article.all
+      
+      articles.each do |article|
+        expect(json_response[articles.index(article)]).to include('category')
+        expect(json_response[articles.index(article)]['category'].length).to eq 2
+        expect(json_response[articles.index(article)]['category']).to be_truthy
+      end
+    end
+    
+    it "has a reviews key in the response" do
+
+      articles = Article.all
+
+      articles.each do |article|
+        FactoryBot.create(:review, article_id: article.id, score: 10)
+
+        get "/api/v1/articles", headers: headers
+        expect(json_response[articles.index(article)]).to include('reviews')
+        expect(json_response[articles.index(article)]['reviews'][0].length).to eq 4
+        expect(json_response[articles.index(article)]['reviews']).to be_truthy
+      end
+    end
   end
 
   describe "GET /api/v1/articles/id" do
