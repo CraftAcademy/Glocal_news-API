@@ -21,12 +21,14 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
     
     it "has a category key in the response" do
       get "/api/v1/articles", headers: headers
-      expect(json_response.first).to include('category')
-      expect(json_response.first['category'].length).to eq 2
-      expect(json_response.first['category']).to be_truthy
-      expect(json_response.last).to include('category')
-      expect(json_response.last['category'].length).to eq 2
-      expect(json_response.last['category']).to be_truthy
+
+      articles = Article.all
+      
+      articles.each do |article|
+        expect(json_response[articles.index(article)]).to include('category')
+        expect(json_response[articles.index(article)]['category'].length).to eq 2
+        expect(json_response[articles.index(article)]['category']).to be_truthy
+      end
     end
     
     it "has a reviews key in the response" do
