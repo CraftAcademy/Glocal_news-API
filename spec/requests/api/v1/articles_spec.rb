@@ -6,7 +6,7 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
 
   describe "GET /api/v1/articles" do
     before do
-      5.times { FactoryBot.create(:article) }
+      5.times { FactoryBot.create(:article, user_id: user.id) }
     end
 
     it "returns a collection of articles" do
@@ -36,7 +36,7 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
       articles = Article.all
 
       articles.each do |article|
-        FactoryBot.create(:review, article_id: article.id, score: 10)
+        FactoryBot.create(:review, article_id: article.id, score: 10, user_id: user.id)
 
         get "/api/v1/articles", headers: headers
         expect(json_response[articles.index(article)]).to include('reviews')
@@ -47,7 +47,7 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
   end
 
   describe "GET /api/v1/articles/id" do
-    let(:article) { FactoryBot.create(:article)}
+    let(:article) { FactoryBot.create(:article, user_id: user.id)}
 
     before do
       get "/api/v1/articles/"+"#{article.id}", headers: headers
@@ -73,6 +73,7 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
       let(:category) { FactoryBot.create(:category) }
   
       before do
+
         post "/api/v1/articles", params: {
           article: {
             title: 'Gothenburg is great',
@@ -82,7 +83,8 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
             written_by: 'Steffe Karlberg',
             category_id: category.id,
             country: "Sweden",
-            city: "Gothenburg"
+            city: "Gothenburg",
+            user_id: user.id
             }
         }, headers: headers
         end
@@ -110,7 +112,7 @@ RSpec.describe Api::V1::ArticlesController, type: :request do
           }
         }, headers: headers
 
-        expect(json_response['error']).to eq ["Category must exist", "Ingress can't be blank", "Ingress is too short (minimum is 50 characters)", "Body can't be blank", "Body is too short (minimum is 1000 characters)", "Image can't be blank", "Category can't be blank", "Country can't be blank", "City can't be blank"]
+        expect(json_response['error']).to eq ["Category must exist", "User must exist", "Ingress can't be blank", "Ingress is too short (minimum is 50 characters)", "Body can't be blank", "Body is too short (minimum is 1000 characters)", "Image can't be blank", "Category can't be blank", "Country can't be blank", "City can't be blank"]
 
         expect(response.status).to eq 422
       end

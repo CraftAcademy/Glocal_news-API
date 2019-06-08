@@ -19,7 +19,7 @@ class Api::V1::ReviewsController < ApplicationController
   private
 
   def review_params
-    params.require(:review).permit(:score, :comment)
+    params.require(:review).permit(:score, :comment, :user_id)
   end
 
   def publish_article
