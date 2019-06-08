@@ -5,7 +5,7 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
   let(:credentials) { user.create_new_auth_token }
   let(:headers) { { HTTP_ACCEPT: "application/json" }.merge!(credentials) }
   let(:not_headers) { {HTTP_ACCEPT: "application/json"} }
-  let(:article) { FactoryBot.create(:article) }
+  let(:article) { FactoryBot.create(:article, user_id: user.id) }
 
   describe "POST /api/v1/articles/id/reviews" do
     describe "successfully" do
@@ -13,7 +13,8 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
         post "/api/v1/articles/"+"#{article.id}"+"/reviews", params: {
           review: { 
             score: 8, 
-            comment: "Good article, well done!"
+            comment: "Good article, well done!",
+            user_id: user.id
           }
         }, headers: headers
       end
@@ -39,7 +40,8 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
       it "can not be created without providing both, score and comment" do
         post "/api/v1/articles/"+"#{article.id}"+"/reviews", params: {
           review: {
-            score: 8
+            score: 8,
+            user_id: user.id
           }
         }, headers: headers
       
@@ -54,11 +56,12 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
 
     describe "successfully publishes article if 3 reviews or more and score is high enough" do
       before do
-        2.times { FactoryBot.create(:review, article_id: article.id, score: 10) }
+        2.times { FactoryBot.create(:review, article_id: article.id, score: 10, user_id: user.id) }
         post "/api/v1/articles/"+"#{article.id}"+"/reviews", params: {
           review: {
             score: 10,
-            comment: "Good article, well done!"
+            comment: "Good article, well done!",
+            user_id: user.id
           }
         }, headers: headers
         article.reload
@@ -71,11 +74,12 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
 
     describe "more than 3 reviews but not high enough average score" do
       before do
-        2.times { FactoryBot.create(:review, article_id: article.id, score: 1) }
+        2.times { FactoryBot.create(:review, article_id: article.id, score: 1, user_id: user.id) }
         post "/api/v1/articles/"+"#{article.id}"+"/reviews", params: {
           review: { 
             score: 4, 
-            comment: "You got a lot of typos but apart from that it's a good article :P"
+            comment: "You got a lot of typos but apart from that it's a good article :P",
+            user_id: user.id
           }
         }, headers: headers
         article.reload
@@ -92,7 +96,8 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
         post "/api/v1/articles/"+"#{article.id}"+"/reviews", params: {
           review: {
             score: 8,
-            comment: "Good article, well done!"
+            comment: "Good article, well done!",
+            user_id: user.id
           }
         }, headers: headers
       end
