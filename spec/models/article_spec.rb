@@ -28,11 +28,12 @@ RSpec.describe Article, type: :model do
   end
 
   describe 'Relations' do
-    it { is_expected.to have_many :reviews }
+    it { is_expected.to belong_to(:category) }
+    it { is_expected.to belong_to :user }
   end
 
   describe 'Association' do
-    it { is_expected.to belong_to(:category) }
+    it { is_expected.to have_many :reviews }
   end
   
   describe 'Factory' do
