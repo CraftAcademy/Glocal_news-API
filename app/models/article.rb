@@ -1,6 +1,7 @@
 class Article < ApplicationRecord
   has_many :reviews
   belongs_to :category
+  belongs_to :user
   validates_presence_of :title, :ingress, :body, :image, :written_by, :category_id, :country, :city
   validates :title, length: { minimum: 3, maximum: 50 }
   validates :ingress, length: { minimum: 50, maximum: 200 }

@@ -12,11 +12,13 @@ RSpec.describe Review, type: :model do
 
   describe 'Relations' do
     it { is_expected.to belong_to :article }
+    it { is_expected.to belong_to :user }
   end
 
   describe 'Factory' do
+    let(:user) { FactoryBot.create(:user, email: 'george@email.com') }
     it 'should have valid factory' do
-      expect(FactoryBot.create(:review)).to be_valid
+      expect(FactoryBot.create(:review, user_id: user.id)).to be_valid
     end
   end
 end

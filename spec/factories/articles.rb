@@ -6,6 +6,7 @@ FactoryBot.define do
     image { "MyString" }
     written_by { "Steffe Karlberg" }
     association :category
+    association :user
     country { "Sweden" }
     city { "Gothenburg" }
   end
